@@ -7,28 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.filmistan.webapp.service.AdminService;
+import com.filmistan.webapp.service.ShowService;
 
 @RestController
-@RequestMapping(path = "/filmistan/admin")
-public class AdminController {
+@RequestMapping(path = "/filmistan/admin/show")
+public class ShowController {
 	
-	
-	@Autowired 
-	private AdminService AdminService;
-	
-	//getAllusers
-	@CrossOrigin("http://localhost:4200")
-	@GetMapping("/user/all")
-	public JSONObject getAllUsers(){
-		return AdminService.getAllUsers();
-	}
+	@Autowired
+	ShowService showService;
 	
 	@CrossOrigin("http://localhost:4200")
-	@GetMapping("/validate")
-	public String validateAdminLogin(){
-		return AdminService.validateLogin();
+	@GetMapping("all")
+	public JSONObject getAllShows() {
+		return showService.getallShows();
 	}
-	
-	
 }

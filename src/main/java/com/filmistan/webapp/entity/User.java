@@ -1,10 +1,15 @@
 package com.filmistan.webapp.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,7 +17,7 @@ import javax.persistence.Table;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(name = "username")
@@ -21,24 +26,53 @@ public class User {
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "name")
+	private String name;
+	
 	
 	@Column(name = "role")
-	private String role = "admin";
+	private String role;
 	
-	@Column(name = "enabled")
-	private int enabled =1;
+	@OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+	private Set<Bookings> bookings = new HashSet<>();
 
-	public User(String username, String password, String role, int enabled) {
+	
+
+	public User(String username, String password, String name, String role, Set<Bookings> bookings) {
 		super();
 		this.username = username;
 		this.password = password;
+		this.name = name;
 		this.role = role;
-		this.enabled = enabled;
-		
+		this.bookings = bookings;
 	}
-	
-	
-	
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public Set<Bookings> getBookings() {
+		return bookings;
+	}
+
+
+
+	public void setBookings(Set<Bookings> bookings) {
+		this.bookings = bookings;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
 	public User() {}
 
 
@@ -69,8 +103,9 @@ public class User {
 		this.password = password;
 	}
 
-
-	
+	public String getPassword() {
+		return password;
+	}
 
 	public String getRole() {
 		return role;
@@ -82,17 +117,6 @@ public class User {
 		this.role = role;
 	}
 
-
-
-	public int getEnabled() {
-		return enabled;
-	}
-
-
-
-	public void setEnabled(int enabled) {
-		this.enabled = enabled;
-	}
 
 
 }

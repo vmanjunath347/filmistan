@@ -1,9 +1,8 @@
 package com.filmistan.webapp.controller;
 
-import java.util.List;
-import java.util.ListIterator;
-
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,44 +10,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.filmistan.webapp.entity.User;
-import com.filmistan.webapp.repository.UserRepository;
-import com.filmistan.webapp.exception.UserAlreadyExistsException;
-
+import com.filmistan.webapp.service.BasicService;
 
 @RestController
 @RequestMapping(path = "/filmistan")
 public class userController {
 	
-	//inject dependancy
-	@Autowired
-	private UserRepository userRepository;
+	@Autowired 
+	private BasicService basicService;
 	
+	@CrossOrigin("http://localhost:4200")
 	@PostMapping("/register")
-	public User register(@RequestBody User user) {
+	public JSONObject register(@RequestBody User user) {
 		
-			String username = user.getUsername();
-			
-			List<User> users =  this.userRepository.findAll();
-			
-			ListIterator<User> iterator = users.listIterator();
-			
-			while(iterator.hasNext()) {
-				User tempUser = iterator.next();
-				String tempUsername = tempUser.getUsername();
-				if(tempUsername.equals(username)) {
-					throw new UserAlreadyExistsException("User already exists with same name"); 
-				}
-				
-			}
-	
-			return this.userRepository.save(user);
+			return basicService.register(user);
 	}
 	
+	@CrossOrigin("http://localhost:4200")
+	@PostMapping("/adminregister")
+	public JSONObject registerAsAdmin(@RequestBody User user) {
+		
+			return basicService.registerAdmin(user);
+	}
 	
-	//homepage
+	@SuppressWarnings("unchecked")
+	@CrossOrigin("http://localhost:4200")
 	@GetMapping()
-	public String getWelcomePage(){
-		return "Welcome to Filmistan";
+	public JSONObject getWelcomePage(){
+		
+		JSONObject outputJson = new JSONObject();
+		outputJson.put("welcome message", "Welcome to Filmistan");
+		return outputJson;
 	}
 
 }
